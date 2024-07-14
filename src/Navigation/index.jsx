@@ -18,7 +18,7 @@ const items = [
     type: "link",
     label: "Profile",
     icon: MdPerson,
-    path: "/",
+    path: "/profile",
   },
   {
     type: "link",

@@ -7,7 +7,14 @@ const PagesTemplate = ({ children }) => {
   const [collapse, setCollapse] = useState(false);
 
   return (
-    <HStack w="full" h="100vh" bg="gray.100" padding={10} paddingLeft={60} paddingRight={60}>
+    <HStack
+      w="full"
+      h="100vh"
+      bg="gray.100"
+      p={10}
+      // pl={60}
+      // pr={60}
+    >
       <Flex
         as="aside"
         w="full"
@@ -15,11 +22,12 @@ const PagesTemplate = ({ children }) => {
         maxW={collapse ? 350 : 100}
         bg="white"
         alignItems="start"
-        padding={6}
+        p={6}
         flexDirection="column"
         justifyContent="space-between"
         transition="ease-in-out .2s"
         borderRadius="3xl"
+        position="relative"
       >
         <Sidebar collapse={collapse} />
         <IconButton
@@ -41,25 +49,19 @@ const PagesTemplate = ({ children }) => {
         flexDirection="column"
         position="relative"
         borderRadius="3xl"
-        
         overflowY="auto"
-        
         sx={{
-            '&::-webkit-scrollbar': {
-              width: '8px',
-              h:'2px'
-             
-            },
-            '&::-webkit-scrollbar-thumb': {
-              background: '#888',
-              borderRadius: '4px',
-              
-            },
-            '&::-webkit-scrollbar-thumb:hover': {
-              background: '#555',
-            
-            },
-          }}
+          "&::-webkit-scrollbar": {
+            width: "8px",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            background: "#888",
+            borderRadius: "4px",
+          },
+          "&::-webkit-scrollbar-thumb:hover": {
+            background: "#555",
+          },
+        }}
       >
         {children}
       </Box>
@@ -70,7 +72,7 @@ const PagesTemplate = ({ children }) => {
         maxW={350}
         bg="white"
         alignItems="start"
-        padding={6}
+        p={6}
         flexDirection="column"
         justifyContent="space-between"
         transition="ease-in-out .2s"

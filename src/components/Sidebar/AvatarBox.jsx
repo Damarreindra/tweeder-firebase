@@ -22,7 +22,6 @@ function AvatarBox({ collapse }) {
     return () => unsubscribe();
   },[])
 
-  console.log(user);
   return (
     <Flex
       borderWidth={collapse ? 1 : 0}
