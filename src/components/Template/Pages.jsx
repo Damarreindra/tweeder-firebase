@@ -4,7 +4,7 @@ import { MdMenu } from "react-icons/md";
 import { Sidebar } from "../Sidebar/Sidebar";
 
 const PagesTemplate = ({ children }) => {
-  const [collapse, setCollapse] = useState(false);
+  const [collapse, setCollapse] = useState(true);
 
   return (
     <HStack
@@ -12,8 +12,8 @@ const PagesTemplate = ({ children }) => {
       h="100vh"
       bg="gray.100"
       p={10}
-      // pl={60}
-      // pr={60}
+      pl={60}
+      pr={60}
     >
       <Flex
         as="aside"
@@ -30,14 +30,7 @@ const PagesTemplate = ({ children }) => {
         position="relative"
       >
         <Sidebar collapse={collapse} />
-        <IconButton
-          aria-label="Menu Collapse"
-          icon={<MdMenu />}
-          position="absolute"
-          top={6}
-          left={6}
-          onClick={() => setCollapse(!collapse)}
-        />
+        
       </Flex>
       <Box
         as="main"
@@ -48,7 +41,7 @@ const PagesTemplate = ({ children }) => {
         justifyContent="flex-start"
         flexDirection="column"
         position="relative"
-        borderRadius="3xl"
+        // borderRadius="3xl"
         overflowY="auto"
         sx={{
           "&::-webkit-scrollbar": {

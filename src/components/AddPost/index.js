@@ -21,7 +21,7 @@ function TweedForm() {
   }, [addPostResult]);
 
   return (
-    <VStack w="full"   borderBottomWidth="1px" borderColor="gray.200" spacing={4}>
+    <VStack w="full" mt={3}  borderBottomWidth="1px" borderColor="gray.200" spacing={4}>
       <Flex
         as="form"
         onSubmit={(e) => handleSubmit(e)}
@@ -33,7 +33,7 @@ function TweedForm() {
         boxShadow="sm"
         
       >
-        <Avatar name="User" src="https://via.placeholder.com/150" size="md" />
+        <Avatar name="User" src="https://via.placeholder.com/150" size="md"  />
         <Textarea
           placeholder="What's happening?"
           value={content}
@@ -42,6 +42,7 @@ function TweedForm() {
           border="none"
           _focus={{ boxShadow: 'none' }}
           ml={4}
+          required
           rows={2}
           flex="1"
         />

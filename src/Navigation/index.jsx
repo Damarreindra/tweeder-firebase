@@ -6,13 +6,14 @@ import {
   MdOutlineSettingsInputComposite,
 } from "react-icons/md";
 import { NavItem } from "./NavItem";
+import { useLocation } from 'react-router-dom'; // Import useLocation hook
 
 const items = [
   {
     type: "link",
     label: "Home",
     icon: MdHome,
-    path: "/",
+    path: "/home",
   },
   {
     type: "link",
@@ -20,22 +21,30 @@ const items = [
     icon: MdPerson,
     path: "/profile",
   },
-  {
-    type: "link",
-    label: "Settings",
-    icon: MdOutlineSettingsInputComposite,
-    path: "/",
-  },
+  // {
+  //   type: "link",
+  //   label: "Settings",
+  //   icon: MdOutlineSettingsInputComposite,
+  //   path: "/settings", 
+  // },
 ];
 
-const Navigation = ({ collapse }) => (
-  <List w="full" my={8} mt={5}>
-    {items.map((item, index) => (
-      <ListItem key={index}>
-        <NavItem item={item} isActive={index === 0} collapse={collapse} />
-      </ListItem>
-    ))}
-  </List>
-);
+const Navigation = ({ collapse }) => {
+  const location = useLocation();
+
+  return (
+    <List w="full" my={8} mt={5}>
+      {items.map((item, index) => (
+        <ListItem key={index}>
+          <NavItem
+            item={item}
+            isActive={location.pathname === item.path} // Check if current path matches item path
+            collapse={collapse}
+          />
+        </ListItem>
+      ))}
+    </List>
+  );
+};
 
 export default Navigation;

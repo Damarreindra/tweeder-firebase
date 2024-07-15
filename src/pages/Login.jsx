@@ -35,10 +35,8 @@ function Login() {
       const res = await dispatch(login(email, password));
 
       if (res) {
-        console.log("Login successful");
         navigate("/home");
       } else {
-        console.log("Login failed");
         setLoginError("Invalid email or password");
       }
     } catch (error) {

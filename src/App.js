@@ -1,27 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
-import { BrowserRouter as Router, Routes, Route} from "react-router-dom"
-import LandingPage from './pages/LandingPage';
-import Register from './pages/Register';
-import Login from './pages/Login';
-import Home from './pages/Home';
-import Profile from './pages/Profile';
+import "./App.css";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import LandingPage from "./pages/LandingPage";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
+import Home from "./pages/Home";
+import Profile from "./pages/Profile";
+import { AuthProvider } from "./auth/AuthContext";
+import ProtectedRoute from "./auth/ProtectedRoute";
+import DetailPost from "./pages/DetailPost";
 
 function App() {
   return (
     <Router>
-    <Routes>
-     
-     <Route path='/login' exact element={<Login/>}/> 
-     <Route path='/home' exact element={<Home/>}/> 
-     <Route path='/register' exact element={<Register/>}/>
-     <Route path='/profile' exact element={<Profile/>}/>
+      <AuthProvider>
+        <Routes>
+        {/* <Route element={<ProtectedRoute />}></ */}
+          
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/" element={<LandingPage />} />
 
-     <Route path="/" element={<LandingPage />}/>
-    
-   </Routes>
- </Router>
-    
+          <Route element={<ProtectedRoute />}>
+            <Route path="/home" element={<Home />} />
+            <Route path="/status/:uid" element={<DetailPost />} />
+            <Route path="/profile" element={<Profile />} />
+          </Route>
+        </Routes>
+      </AuthProvider>
+    </Router>
   );
 }
 

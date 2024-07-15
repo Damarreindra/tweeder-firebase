@@ -5,22 +5,34 @@ import { useState } from "react";
 import app from "../../firebase";
 import { useEffect } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import {
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuItemOption,
+  MenuGroup,
+  MenuOptionGroup,
+  MenuDivider,
+  Portal,
+} from "@chakra-ui/react";
+import Logout from "../Logout/Logout";
 
 function AvatarBox({ collapse }) {
   const auth = getAuth(app);
 
-  const [user, setUser] = useState("")
+  const [user, setUser] = useState("");
 
-  useEffect(()=>{
-    const unsubscribe = onAuthStateChanged(auth,(user)=>{
-      if(user){
-        setUser(user)
-      }else{
-        setUser(null)
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user);
+      } else {
+        setUser(null);
       }
-    })
+    });
     return () => unsubscribe();
-  },[])
+  }, []);
 
   return (
     <Flex
@@ -34,8 +46,8 @@ function AvatarBox({ collapse }) {
       gap={2}
       flexDirection={collapse ? "row" : "column-reverse"}
     >
-      {user ? (<Avatar src={user.photoURL} bg="teal.300" />):""}
-      
+      {user ? <Avatar src={user.photoURL} bg="teal.300" /> : ""}
+
       {collapse && (
         <Flex
           w="full"
@@ -48,22 +60,24 @@ function AvatarBox({ collapse }) {
             {user.displayName}
           </Text>
           <Text as="small" color="gray.500" fontSize={12} lineHeight={0}>
-          {user.email}
+            {user.email}
           </Text>
         </Flex>
       )}
-
-      <IconButton
-        aria-label="Settings"
-        icon={<MdOutlineMoreHoriz />}
-        borderRadius="full"
-        color="gray.400"
-        variant="ghost"
-        fontSize={20}
-      />
+      <Menu>
+        <MenuButton borderRadius="full" color="gray.400" variant="ghost">
+          {" "}
+          <IconButton borderRadius="full" icon={<MdOutlineMoreHoriz />} />
+        </MenuButton>
+        <Portal>
+          <MenuList>
+            <MenuItem><Logout/></MenuItem>
+            
+          </MenuList>
+        </Portal>
+      </Menu>
     </Flex>
   );
 }
 
-export { AvatarBox }; 
-
+export { AvatarBox };

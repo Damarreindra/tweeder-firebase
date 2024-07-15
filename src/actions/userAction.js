@@ -133,23 +133,35 @@ export const addPost = (data) => async (dispatch) => {
     type: ADD_POST,
     payload: { loading: true, data: false, errorMessage: false },
   });
-  const db = getFirestore(app);
+  const db = getFirestore(app)
   const auth = getAuth(app);
 
   try {
-    await new Promise((resolve) => {
+    await new Promise((resolve, reject) => {
       onAuthStateChanged(auth, async (user) => {
-        
         if (!user) {
-          throw new Error("No logged-in user");
+          return reject(new Error("No logged-in user"));
         }
-       const postDataWithAuthor = { ...data, author: {
-          displayName: user.displayName,
-          photoUrl: user.photoURL
-        }};
 
-        await addDoc(collection(db, "threads"), postDataWithAuthor);
-        resolve();
+        const newThreadRef = doc(collection(db, "threads")); // Create a new document reference
+        const postDataWithAuthorAndUid = {
+          ...data,
+          uid: newThreadRef.id, // Include the document ID as the thread UID
+          author: {
+            displayName: user.displayName,
+            photoUrl: user.photoURL,
+            uid: user.uid,
+          },
+        };
+
+        try {
+          console.log("Storing post with data:", postDataWithAuthorAndUid); // Logging for debugging
+          await setDoc(newThreadRef, postDataWithAuthorAndUid); // Use setDoc to set the document with the generated ID
+          resolve();
+        } catch (error) {
+          console.error("Error adding document:", error); // Logging for debugging
+          reject(error);
+        }
       });
     });
 

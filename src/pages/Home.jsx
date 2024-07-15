@@ -4,14 +4,17 @@ import TweedForm from '../components/AddPost';
 import MainCard from '../components/Card/MainCard';
 import { useDispatch, useSelector } from 'react-redux';
 import { getThreads } from '../actions/threadsAction';
+import Logout from '../components/Logout/Logout';
 
 function Home() {
-  const threads = useSelector((state) => state.ThreadsReducer.getThreadResult);
+  const threads = useSelector((state) => state.ThreadsReducer.getThreadsResult);
+  const refresh = useSelector((state) => state.UserReducer.addPostResult);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getThreads());
-  }, [dispatch]);
+  }, [refresh]);
+  console.log(threads);
   return (
     <PagesTemplate>
       <TweedForm />
@@ -20,15 +23,12 @@ function Home() {
         threads.map((thread, index) => (
           <MainCard
             key={index}
-            content={thread.content}
-            author={thread.author}
-            createdAt={thread.createdAt}
+            thread={thread}
           />
         ))
       ) : (
         <p>Loading threads...</p>
       )}
-
     </PagesTemplate>
   );
 }

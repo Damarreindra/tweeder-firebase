@@ -22,9 +22,9 @@ export const NavItem = ({ item, isActive, collapse }) => {
           gap={1}
           display="flex"
           alignItems="center"
-          _hover={{ textDecoration: "none", color: "black" }}
+          _hover={{ textDecoration: "none", color: "green.500" }}
           fontWeight="medium"
-          color={isActive ? "black" : "gray.400"}
+          color={isActive ? "teal" : "gray.400"}
           w="full"
           justifyContent={collapse ? "space-between" : "center"}
         >
