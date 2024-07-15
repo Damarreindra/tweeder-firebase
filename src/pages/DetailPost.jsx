@@ -5,6 +5,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { getDetailThread } from '../actions/threadsAction';
 import MainCard from '../components/Card/MainCard';
+import Loader from '../lottie/loading.json'
+import Lottie from 'lottie-react';
+
 
 function DetailPost() {
     const {uid} = useParams()
@@ -21,7 +24,8 @@ console.log(detail);
     <>
     <PagesTemplate>
     {
-        detail ? (<MainCard thread={detail[0]}/> ) : "LOADNG"
+        detail ? (<MainCard thread={detail[0]}/> ) : 
+        <Lottie animationData={Loader}/>
     }
 
 

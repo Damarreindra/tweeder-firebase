@@ -7,7 +7,7 @@ function Jumbotron() {
       <Box>
         <Flex justify="center">
           <Image 
-            src="https://github-production-user-asset-6210df.s3.amazonaws.com/80618060/348557615-a1e25797-db15-4d48-9dc2-e0956b3b4c70.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20240714%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240714T164146Z&X-Amz-Expires=300&X-Amz-Signature=16a4e2ed55058616ea91d19bdfdee4def570255539e80837283fcb81ba82225a&X-Amz-SignedHeaders=host&actor_id=80618060&key_id=0&repo_id=694494643" 
+            src="https://github.com/user-attachments/assets/bb0a7e02-17b8-4ed2-96f2-dd69622a63b6" 
            
           />
         </Flex>    

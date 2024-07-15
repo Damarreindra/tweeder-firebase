@@ -4,7 +4,8 @@ import TweedForm from '../components/AddPost';
 import MainCard from '../components/Card/MainCard';
 import { useDispatch, useSelector } from 'react-redux';
 import { getThreads } from '../actions/threadsAction';
-import Logout from '../components/Logout/Logout';
+import Loader from '../lottie/loading.json'
+import Lottie from 'lottie-react';
 
 function Home() {
   const threads = useSelector((state) => state.ThreadsReducer.getThreadsResult);
@@ -14,7 +15,6 @@ function Home() {
   useEffect(() => {
     dispatch(getThreads());
   }, [refresh]);
-  console.log(threads);
   return (
     <PagesTemplate>
       <TweedForm />
@@ -27,7 +27,7 @@ function Home() {
           />
         ))
       ) : (
-        <p>Loading threads...</p>
+        <Lottie animationData={Loader}/>
       )}
     </PagesTemplate>
   );

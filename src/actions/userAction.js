@@ -155,7 +155,6 @@ export const addPost = (data) => async (dispatch) => {
         };
 
         try {
-          console.log("Storing post with data:", postDataWithAuthorAndUid); // Logging for debugging
           await setDoc(newThreadRef, postDataWithAuthorAndUid); // Use setDoc to set the document with the generated ID
           resolve();
         } catch (error) {

@@ -12,8 +12,8 @@ const PagesTemplate = ({ children }) => {
       h="100vh"
       bg="gray.100"
       p={10}
-      pl={60}
-      pr={60}
+      // pl={60}
+      // pr={60}
     >
       <Flex
         as="aside"

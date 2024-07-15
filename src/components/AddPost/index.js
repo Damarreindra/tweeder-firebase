@@ -2,17 +2,33 @@ import { Avatar, Button, Flex, Textarea, VStack } from '@chakra-ui/react';
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addPost } from '../../actions/userAction';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import app from '../../firebase';
 
 function TweedForm() {
   const dispatch = useDispatch();
   const createdAt = Date.now();
   const [content, setContent] = useState('');
   const addPostResult = useSelector((state) => state.UserReducer.addPostResult);
+  const auth = getAuth(app)
+  const [user, setUser] = useState('')
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(addPost({ content: content, createdAt }));
   };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user);
+      } else {
+        setUser(null);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     if (addPostResult) {
@@ -33,7 +49,7 @@ function TweedForm() {
         boxShadow="sm"
         
       >
-        <Avatar name="User" src="https://via.placeholder.com/150" size="md"  />
+        <Avatar name={`${user.displayName}`} src={`${user.photoURL}`} size="md"  />
         <Textarea
           placeholder="What's happening?"
           value={content}
