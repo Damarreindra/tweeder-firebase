@@ -5,6 +5,10 @@ import {
   getDocs,
   query,
   where,
+  updateDoc,
+  increment,
+  arrayUnion,
+  arrayRemove,
 } from "firebase/firestore";
 import app from "../firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -12,6 +16,7 @@ export const GET_THREADS = "GET_THREADS";
 export const GET_THREAD = "GET_THREAD";
 export const GET_DETAIL_THREAD
 = "GET_DETAIL_THREAD";
+const db = getFirestore(app);
 
 
 export const getThreads = () => {
@@ -69,7 +74,6 @@ export const getThread = () => {
 
     try {
       onAuthStateChanged(auth, async (user) => {
-        console.log(user);
         if (!user) {
           throw new Error("No logged-in user");
         }
@@ -118,7 +122,6 @@ export const getDetailThread = (uid) => {
       },
     });
 
-    const db = getFirestore(app);
     const auth = getAuth(app);
 
     try {
@@ -159,3 +162,22 @@ export const getDetailThread = (uid) => {
     }
   };
 };
+
+
+export const likeThread =async(threadId, userId)=>{
+  const threadRef = doc(db, 'threads', threadId)
+  await updateDoc(threadRef,{
+    likes: increment(1),
+    likedBy: arrayUnion(userId)
+  })
+}
+
+
+
+export const unLikeThread =async(threadId, userId)=>{
+  const threadRef = doc(db, 'threads', threadId)
+  await updateDoc(threadRef,{
+    likes: increment(-1),
+    likedBy: arrayRemove(userId)
+  })
+}

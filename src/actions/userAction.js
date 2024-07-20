@@ -3,7 +3,8 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
-  onAuthStateChanged 
+  onAuthStateChanged, 
+  updateProfile
 } from "firebase/auth";
 import {
   doc,
@@ -14,6 +15,8 @@ import {
   getDocs,
   addDoc,
   updateDoc,
+  arrayUnion,
+  Timestamp,
 } from "firebase/firestore";
 import app from "../firebase";
 
@@ -97,18 +100,23 @@ export const addUser = (data) => async (dispatch) => {
   });
 
   const auth = getAuth(app);
-  const db = getFirestore(app);
-
+  const db = getFirestore(app)
   try {
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       data.email,
       data.password
     );
-    const userId = userCredential.user.uid;
+    const user = userCredential.user
 
-    const userDocRef = doc(db, "users", userId);
-    await setDoc(userDocRef, data);
+    await updateProfile(user,{
+      displayName:data.username
+    })
+
+    await setDoc(doc(db, "users", user.uid), {
+    name: data.name,
+    header: "https://github.com/user-attachments/assets/bb0a7e02-17b8-4ed2-96f2-dd69622a63b6",
+    });
 
     dispatch({
       type: ADD_USER,
@@ -142,11 +150,13 @@ export const addPost = (data) => async (dispatch) => {
         if (!user) {
           return reject(new Error("No logged-in user"));
         }
-
         const newThreadRef = doc(collection(db, "threads")); // Create a new document reference
         const postDataWithAuthorAndUid = {
           ...data,
-          uid: newThreadRef.id, // Include the document ID as the thread UID
+          uid: newThreadRef.id, 
+          likes:0,
+          likedBy:[],
+          comments:[],
           author: {
             displayName: user.displayName,
             photoUrl: user.photoURL,
@@ -202,51 +212,46 @@ export const addPostProfile = (data) => async (dispatch) => {
   }
 };
 
-// Comment Actions
-export const getComments = () => async (dispatch) => {
-  dispatch({
-    type: GET_COMMENTS,
-    payload: { loading: true, data: false, errorMessage: false },
-  });
-  const db = getFirestore(app);
 
-  try {
-    const commentsCollection = collection(db, "comments");
-    const commentsSnapshot = await getDocs(commentsCollection);
-    const commentsData = commentsSnapshot.docs.map((doc) => doc.data());
 
-    dispatch({
-      type: GET_COMMENTS,
-      payload: { loading: false, data: commentsData, errorMessage: false },
-    });
-  } catch (error) {
-    dispatch({
-      type: GET_COMMENTS,
-      payload: { loading: false, data: false, errorMessage: error.message },
-    });
-  }
-};
-
-export const addComment = (data) => async (dispatch) => {
+export const addComment = ({comment, uid, createdAt, user}) => async (dispatch) => {
+  
   dispatch({
     type: ADD_COMMENT,
     payload: { loading: true, data: false, errorMessage: false },
   });
   const db = getFirestore(app);
-
   try {
-    await addDoc(collection(db, "comments"), data);
+    const newThreadRef = doc(db, "threads", uid);
+    console.log(newThreadRef);
+    const commentWithTimestamp = {
+      comment,
+      createdAt: createdAt,
+      author:{
+        displayName:user.displayName,
+        photoURL: user.photoURL,
+      }
+      
+    };
+    await updateDoc(newThreadRef,{
+      comments: arrayUnion(commentWithTimestamp)
+    });
     dispatch({
       type: ADD_COMMENT,
       payload: { loading: false, data: true, errorMessage: false },
     });
   } catch (error) {
+    console.error(error)
     dispatch({
       type: ADD_COMMENT,
       payload: { loading: false, data: false, errorMessage: error.message },
     });
   }
 };
+
+
+
+
 
 export const addProfileImg = (data) => {
   return async (dispatch) => {
@@ -331,76 +336,4 @@ export const editProfileImg = (data) => {
   };
 };
 
-export const updatePublish = (id, uid) => {
-  return async (dispatch) => {
-    dispatch({
-      type: UPDATE_PUBLISH,
-      payload: {
-        loading: true,
-        data: false,
-        errorMessage: false,
-      },
-    });
 
-    const db = getFirestore(app);
-
-    try {
-      const userDocRef = doc(db, `users/${uid}/threads`, id);
-      await updateDoc(userDocRef, { publish: true });
-
-      dispatch({
-        type: UPDATE_PUBLISH,
-        payload: {
-          loading: false,
-          data: true,
-          errorMessage: false,
-        },
-      });
-    } catch (err) {
-      dispatch({
-        type: UPDATE_PUBLISH,
-        payload: {
-          loading: false,
-          data: false,
-          errorMessage: err.message,
-        },
-      });
-    }
-  };
-};
-
-export const unPublish = (id, uid) => async (dispatch) => {
-  dispatch({
-    type: UNPUBLISH,
-    payload: {
-      loading: true,
-      data: false,
-      errorMessage: false,
-    },
-  });
-
-  const db = getFirestore(app);
-
-  try {
-    const userDocRef = doc(db, `users/${uid}/threads`, id);
-    await updateDoc(userDocRef, { publish: false });
-
-    dispatch({
-      type: UNPUBLISH,
-      payload: {
-        loading: false,
-        data: true,
-        errorMessage: false,
-      },
-    });
-  } catch (err) {
-    dispatch({
-      type: UNPUBLISH,
-      payload: {
-        loading: false,
-        data: false,
-        errorMessage: err.message,
-      },
-    });
-  }
-};

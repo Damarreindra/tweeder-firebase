@@ -8,6 +8,7 @@ import Profile from "./pages/Profile";
 import { AuthProvider } from "./auth/AuthContext";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import DetailPost from "./pages/DetailPost";
+import UnProtectedRoute from "./auth/UnProtectedRoute";
 
 function App() {
   return (
@@ -16,10 +17,11 @@ function App() {
         <Routes>
         {/* <Route element={<ProtectedRoute />}></ */}
           
+          {/* <Route element={<UnProtectedRoute/>}> */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/" element={<LandingPage />} />
-
+          {/* </Route> */}
           <Route element={<ProtectedRoute />}>
             <Route path="/home" element={<Home />} />
             <Route path="/status/:uid" element={<DetailPost />} />

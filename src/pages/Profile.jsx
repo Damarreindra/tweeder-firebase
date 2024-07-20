@@ -1,41 +1,79 @@
-import React, { useEffect, useState } from 'react'
-import PagesTemplate from '../components/Template/Pages'
-import { useDispatch, useSelector } from 'react-redux';
-import { getThread } from '../actions/threadsAction';
-import MainCard from '../components/Card/MainCard';
-import Jumbotron from '../components/Jumbotron/Jumbotron';
-import Lottie from 'lottie-react';
-import Loader from '../lottie/loading.json'
+import React, { useEffect, useState } from "react";
+import PagesTemplate from "../components/Template/Pages";
+import { useDispatch, useSelector } from "react-redux";
+import { getThread } from "../actions/threadsAction";
+import MainCard from "../components/Card/MainCard";
+import Jumbotron from "../components/Jumbotron/Jumbotron";
+import Lottie from "lottie-react";
+import Loader from "../lottie/loading.json";
+import NavbarProfile from "../components/navbar/NavbarProfile";
+import ProfileCard from "../components/Card/ProfileCard";
+import PageSkeleton from "../components/Skeleton/PageSkeleton";
+import JumbotronSkeleton from "../components/Skeleton/JumbotronSkeleton";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
+import app from "../firebase";
+import StaticNavbarProfile from "../components/navbar/StaticNavbarProfile";
+
 function Profile() {
   const threads = useSelector((state) => state.ThreadsReducer.getThreadResult);
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false)
-  
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
   useEffect(() => {
     dispatch(getThread());
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 3000); // 3 seconds
-
-    return () => clearTimeout(timer);
+    }, 700);
+    return () => clearTimeout(timer); // Cleanup the timer on component unmount
   }, [dispatch]);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userDocRef = doc(db, "users", user.uid);
+        const userDoc = await getDoc(userDocRef);
+
+        if (userDoc.exists()) {
+          setUser({ user, ...userDoc.data() });
+        } else {
+          setUser(user);
+        }
+      } else {
+        setUser(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [auth, db]);
+
   return (
     <>
-    <PagesTemplate>
-      <Jumbotron/>
-    {threads ? (
-        threads.map((thread, index) => (
-          <MainCard
-            key={index}
-            thread={thread}
-          />
-        ))
+      {loading ? (
+        <PageSkeleton />
       ) : (
-        <Lottie animationData={Loader}/>
+        <PagesTemplate>
+            {threads.length > 0 ? (
+            <NavbarProfile user={user} thread={threads} />
+          ) : (
+            <StaticNavbarProfile />
+          )}
+         
+          <Jumbotron user={user} />
+          {threads.length > 0 ? (
+            threads.map((thread, index) => (
+              <ProfileCard key={index} user={user} thread={thread} />
+            ))
+          ) : (
+           ""
+          )}
+        </PagesTemplate>
       )}
-    </PagesTemplate>
     </>
-  )
+  );
 }
 
-export default Profile
+export default Profile;

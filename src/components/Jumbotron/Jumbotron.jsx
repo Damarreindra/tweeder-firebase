@@ -1,36 +1,30 @@
 import { Avatar, Box, Button, Flex, Image, Text } from '@chakra-ui/react';
 import React from 'react';
+import EditPictureModal from '../EditProfile/EditPictureModal';
 
-function Jumbotron() {
+function Jumbotron({user}) {
   return (
     <>
       <Box>
         <Flex justify="center">
           <Image 
-            src="https://github.com/user-attachments/assets/bb0a7e02-17b8-4ed2-96f2-dd69622a63b6" 
+            src="/images/header.jpg" 
            
           />
         </Flex>    
         <Flex pl={[2, 5]} justify="space-between" flexWrap="wrap">
           <Avatar 
             border="solid 2px" 
-            mt={[-6, -8, -10, -12]} 
+            mt={[-6, -8, -10, -16]} 
             size="2xl" 
-            src="https://github.com/user-attachments/assets/35ec50e8-7d0b-4385-95ed-24d2bb309a2c" 
+            src={user.user.photoURL}
           />    
-          <Button 
-            mt={[2, 4]} 
-            variant="outline" 
-            color="wheat" 
-            borderRadius="3xl" 
-            background="black"
-          >
-            Edit Profile
-          </Button>
+         
+          <EditPictureModal/>
         </Flex> 
-        <Flex pl={[2, 5]} flexDir="column">
-          <Text fontSize={['lg', 'xl']} m={0} fontWeight="bold">orang amerisya</Text>
-          <Text fontSize={['sm', 'md']}>@damareindra</Text>
+        <Flex p={2} pl={[2, 5]} flexDir="column">
+          <Text fontSize={['lg', 'xl']} m={0} fontWeight="bold">{user.name}</Text>
+         <Text fontSize={'sm'} color={'gray.500'}>@{user.user.displayName}</Text>
         </Flex>
       </Box>    
     </>

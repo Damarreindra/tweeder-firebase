@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../actions/userAction";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   Box,
@@ -20,13 +20,14 @@ import {
 function Register() {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [role] = useState("user");
   const [error, setError] = useState("");
   const { addUserResult, addUserError } = useSelector(
     (state) => state.UserReducer
   );
-
+  const navigate = useNavigate()
   const createdAt = Date.now();
   const dispatch = useDispatch();
 
@@ -38,8 +39,7 @@ function Register() {
         email: email,
         username: username,
         password: password,
-        createdAt: createdAt,
-        role: "user",
+        name: name
       })
     );
   };
@@ -47,10 +47,11 @@ function Register() {
   useEffect(() => {
     if (addUserResult) {
       alert("Account Successfully Created");
-      window.location = "/login";
+      navigate('/login')
       setPassword("");
       setUsername("");
       setEmail("");
+      setName("")
     } else if (addUserError) {
       setError(addUserError);
       setEmail("");
@@ -103,12 +104,24 @@ function Register() {
                         name="username"
                         id="username"
                         minLength={8}
-                        maxLength={8}
+                        maxLength={24}
                         placeholder="Username"
                       />
                     </FormControl>
-                    <input type="hidden" id="role" name="role" value={role} />
                     <FormControl isRequired>
+                      <FormLabel htmlFor="name">Name</FormLabel>
+                      <Input
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        name="name"
+                        id="name"
+                        minLength={3}
+                        maxLength={24}
+                        placeholder="Name"
+                      />
+                    </FormControl>
+                   <FormControl isRequired>
                       <FormLabel htmlFor="password">Password</FormLabel>
                       <Input
                         type="password"

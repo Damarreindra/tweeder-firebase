@@ -3,7 +3,6 @@ import {
   Card,
   CardHeader,
   CardBody,
-  CardFooter,
   Flex,
   Heading,
   Avatar,
@@ -11,64 +10,95 @@ import {
   Text,
   Button,
 } from "@chakra-ui/react";
-
-import { AiOutlineLike, AiOutlineComment } from "react-icons/ai";
+import { FcComments, FcLike, FcLikePlaceholder } from "react-icons/fc";
 import { formatDistanceStrict } from "date-fns";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { getThread, getThreads, likeThread, unLikeThread } from "../../actions/threadsAction";
+import moment from "moment";
 
-function MainCard({ thread }) {
-  const result = formatDistanceStrict(new Date(thread.createdAt), new Date(), {
-    unit: "hour",
-  });
+function MainCard({ thread, user }) {
+  const result = moment(thread.createdAt).startOf('hour').fromNow(); 
+  
+  const dispatch = useDispatch();
+
+  const isLiked = thread.likedBy.includes(user.user.uid);
+  console.log(user.user);
+
+  const handleLike = async () => {
+    try {
+      if (isLiked) {
+        await unLikeThread(thread.uid, user.user.uid);
+      } else {
+        await likeThread(thread.uid, user.user.uid);
+      }
+      dispatch(getThreads()); 
+    } catch (error) {
+      console.error("Error liking/unliking thread: ", error);
+    }
+  };
   return (
     <>
-      <Link to={`/status/${thread.uid}`}>
-        <Card borderWidth="1px" borderRadius={"unset"} borderColor="gray.200">
-          <CardHeader>
-            <Flex spacing="4">
-              <Flex flex="1" gap="4" alignItems="center" flexWrap="wrap">
-                <Avatar name={thread.author.displayName} src={thread.author.photoUrl} />
+      
+          <Card  borderWidth="1px" borderRadius={"unset"} borderColor="gray.200">
+          <Link style={{color:'black'}}  to={`/status/${thread.uid}`}>
+            <CardHeader>
+              <Flex spacing="4">
+                <Flex flex="1" gap="4" alignItems="center" flexWrap="wrap">
+                  <Avatar name={user.user.displayName} src={user.user.photoURL} />
 
-                <Box>
-                  <Heading size="sm">{thread.author.displayName}</Heading>
-                  {/* <Text>Creator, Chakra UI</Text> */}
-                </Box>
+                  <Box display={'flex'} m={0} gap={2}>
+                    <Text  fontSize="md" fontWeight={'bold'}>{user.name}</Text>
+                    <Text  fontSize="sm" color={'gray.500'}>@{user.user.displayName}</Text>
+                  </Box>
+                </Flex>
+                <Text float={"right"} fontSize={"sm"}>
+                  {result}
+                </Text>
               </Flex>
-              <Text float={"right"} fontSize={"sm"}>
-                {result}
-              </Text>
-            </Flex>
-          </CardHeader>
-          <CardBody mb={"-8"} ml={4}  mt={"-12"}>
-            <Text ml={12}>{thread.content}</Text>
-          </CardBody>
-          {/* <Image
-    objectFit='cover'
-    src='https://images.unsplash.com/photo-1531403009284-440f080d1e12?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80'
-    alt='Chakra UI'
-  /> */}
-
-          <Box ml={12} >
-            <Button
-              variant
-              fontSize="sm"
-              fontWeight={"sm"}
-              leftIcon={<AiOutlineLike />}
-              ml={6}
-            >
-              0
-            </Button>
-            <Button
-              variant
-              fontSize="sm"
-              fontWeight={"sm"}
-              leftIcon={<AiOutlineComment />}
-            >
-              0
-            </Button>
-          </Box>
-        </Card>
-      </Link>
+            </CardHeader>
+            <CardBody mb={"-8"} ml={4} mt={"-12"}>
+              <Text ml={12}>{thread.content}</Text>
+            </CardBody>
+            </Link>
+            <Box ml={12}>
+              {
+                isLiked ? (
+                  <Button
+                  variant=""
+                  fontSize="sm"
+                  fontWeight={"sm"}
+                  leftIcon={< FcLike/>}
+                  ml={6}
+                  onClick={handleLike}
+                >
+                  {thread.likes}
+                </Button>
+                ) :(
+                  <Button
+                  variant=""
+                  fontSize="sm"
+                  fontWeight={"sm"}
+                  leftIcon={<FcLikePlaceholder />}
+                  ml={6}
+                  onClick={handleLike}
+                >
+                  {thread.likes}
+                </Button>
+                )
+              }
+             
+             <Button
+                variant=""
+                fontSize="sm"
+                fontWeight={"sm"}
+                leftIcon={<FcComments fontSize="16px" />}
+              >
+                {thread.comments.length}
+              </Button>
+            </Box>
+          </Card>
+    
     </>
   );
 }

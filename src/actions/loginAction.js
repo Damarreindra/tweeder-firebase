@@ -10,8 +10,7 @@ export const login = (email, password) => (dispatch) => {
       .then((res) => {
         dispatch({ type: "LOGIN", value: true });
         dispatch({ type: "CHANGE_LOADING", value: true });
-     
-
+        localStorage.setItem('uid', res.user.uid)
         resolve(true);
       })
       .catch(() => {
