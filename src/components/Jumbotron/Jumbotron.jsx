@@ -12,7 +12,7 @@ function Jumbotron({user}) {
            
           />
         </Flex>    
-        <Flex pl={[2, 5]} justify="space-between" flexWrap="wrap">
+        <Flex pl={[2, 5]} p={3} justify="space-between" flexWrap="wrap">
           <Avatar 
             border="solid 2px" 
             mt={[-6, -8, -10, -16]} 

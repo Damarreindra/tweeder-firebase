@@ -183,7 +183,7 @@ function EditPictureForm() {
                 </FormControl>
               </VStack>
             </Box>
-            <Button type="submit">Update</Button>
+            <Button alignSelf={'start'} type="submit">Update</Button>
           </Box>
         </Form>
       )}

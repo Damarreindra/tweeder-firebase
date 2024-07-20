@@ -20,7 +20,7 @@ import {
   likeThread,
   unLikeThread,
 } from "../../actions/threadsAction";
-import { FcLike, FcLikePlaceholder } from "react-icons/fc";
+import { FcComments, FcLike, FcLikePlaceholder } from "react-icons/fc";
 import moment from "moment";
 
 function ProfileCard({ thread, user }) {
@@ -55,13 +55,14 @@ function ProfileCard({ thread, user }) {
                   name={thread.author.displayName}
                   src={thread.author.photoUrl}
                 />
-                <Box display={'flex'} gap={2}>
-                  <Text m={0} fontSize={'md'} fontWeight={"bold"}>
+                <Box display={"flex"} gap={2}>
+                  <Text m={0} fontSize={"md"} fontWeight={"bold"}>
                     {user.name}
                   </Text>
-                 
-                  <Text fontSize={'sm'} color={'gray.500'}>@{user.user.displayName}</Text>
-             
+
+                  <Text fontSize={"sm"} color={"gray.500"}>
+                    @{user.user.displayName}
+                  </Text>
                 </Box>
               </Flex>
               <Text float={"right"} fontSize={"sm"}>
@@ -97,14 +98,14 @@ function ProfileCard({ thread, user }) {
               {thread.likes}
             </Button>
           )}
-          <Button
-            variant=""
-            fontSize="sm"
-            fontWeight={"sm"}
-            leftIcon={<AiOutlineComment />}
-          >
-            0
-          </Button>
+         <Button
+                variant=""
+                fontSize="sm"
+                fontWeight={"sm"}
+                leftIcon={<FcComments fontSize="16px" />}
+              >
+                {thread.comments.length}
+              </Button>
         </Box>
       </Card>
     </>

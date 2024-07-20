@@ -9,6 +9,7 @@ import { AuthProvider } from "./auth/AuthContext";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import DetailPost from "./pages/DetailPost";
 import UnProtectedRoute from "./auth/UnProtectedRoute";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -27,6 +28,8 @@ function App() {
             <Route path="/status/:uid" element={<DetailPost />} />
             <Route path="/profile" element={<Profile />} />
           </Route>
+          <Route path="*" element={<NotFound />} /> {/* Catch-all route */}
+
         </Routes>
       </AuthProvider>
     </Router>
