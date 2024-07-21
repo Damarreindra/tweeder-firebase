@@ -1,40 +1,46 @@
 import { Flex, HStack, IconButton, Box, useDisclosure } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import { MdMenu } from "react-icons/md";
 import { Sidebar } from "../Sidebar/Sidebar";
+import NavbarMobile from "../navbar/NavbarMobile";
 
 const PagesTemplate = ({ children }) => {
+  const [collapse, setCollapse] = useState(true);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [collapse, setCollapse] = React.useState(true);
 
   return (
-    <Flex
+    <HStack
       w="full"
       h="100vh"
       bg="gray.100"
-      p={10}
-      flexDirection={{ base: 'column', md: 'row' }}
-      position="relative"
+      p={{base:1, md:10}}
+      display={"flex"}
+      flexDir={{base:'column', md:'row'}}
+      justifyContent={"center"}
     >
-      {/* Mobile Menu Button */}
+      <Flex
+       display={{md:'none'}}
+      >
+        <NavbarMobile/>
+      </Flex>
       <IconButton
         aria-label="Open menu"
         icon={<MdMenu />}
-        display={{ base: 'flex', md: 'none' }}
+        display={{ base: "flex", md: "none" }}
         onClick={onOpen}
         position="absolute"
         top={4}
-        left={4}
+        left={0}
         zIndex="docked"
       />
 
       {/* Mobile Sidebar */}
       <Flex
         as="aside"
-        display={{ base: isOpen ? 'flex' : 'none', md: 'none' }}
+        display={{ base: isOpen ? "flex" : "none", md: "none" }}
         w="full"
         h="full"
-        maxW={collapse ? 250 : 'none'} // Adjust width for mobile
+        maxW={collapse ? 250 : "none"}
         bg="white"
         alignItems="start"
         p={6}
@@ -59,12 +65,13 @@ const PagesTemplate = ({ children }) => {
         />
       </Flex>
 
-      {/* Desktop Sidebar */}
       <Flex
         as="aside"
         display={{ base: 'none', md: 'flex' }}
-        w={collapse ? 350 : 'auto'}
+
+        w="full"
         h="full"
+        maxW={collapse ? 350 : 100}
         bg="white"
         alignItems="start"
         p={6}
@@ -76,21 +83,22 @@ const PagesTemplate = ({ children }) => {
       >
         <Sidebar collapse={collapse} />
       </Flex>
-
       <Box
-        as="main"
-        w="full"
-        h="full"
-        bg="white"
-        alignItems="center"
-        justifyContent="flex-start"
-        flexDirection="column"
-        position="relative"
-        maxW={{ base: 'full', md: '550px' }}
-        overflowY="auto"
-        p={{ base: 4, md: 6 }}
-        ml={{ base: 0, md: collapse ? 0 : 'auto' }}
-        mr={{ base: 0, md: 4 }}
+       as="main"
+       w="full"
+       h="full"
+       bg="white"
+       alignItems="center"
+       justifyContent="flex-start"
+       flexDirection="column"
+       position="relative"
+       overflowY="auto"
+      
+       ml={{ base: 0, md: collapse ? 0 : '350px' }}
+        maxW={550}
+       
+        // borderRadius="3xl"
+ 
         sx={{
           "&::-webkit-scrollbar": {
             width: "8px",
@@ -106,13 +114,13 @@ const PagesTemplate = ({ children }) => {
       >
         {children}
       </Box>
-
-      {/* Right Sidebar */}
       <Flex
         as="aside"
         display={{ base: 'none', md: 'flex' }}
-        w={{ base: 'full', md: 350 }}
+
+        w="full"
         h="full"
+        maxW={350}
         bg="white"
         alignItems="start"
         p={6}
@@ -120,11 +128,10 @@ const PagesTemplate = ({ children }) => {
         justifyContent="space-between"
         transition="ease-in-out .2s"
         borderRadius="3xl"
-        ml="auto"
       >
         {/* Additional content for the right sidebar can go here */}
       </Flex>
-    </Flex>
+    </HStack>
   );
 };
 

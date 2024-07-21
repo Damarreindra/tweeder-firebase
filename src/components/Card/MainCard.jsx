@@ -23,7 +23,6 @@ function MainCard({ thread, user }) {
   const dispatch = useDispatch();
 
   const isLiked = thread.likedBy.includes(user.user.uid);
-  console.log(user.user);
 
   const handleLike = async () => {
     try {
@@ -45,11 +44,11 @@ function MainCard({ thread, user }) {
             <CardHeader>
               <Flex spacing="4">
                 <Flex flex="1" gap="4" alignItems="center" flexWrap="wrap">
-                  <Avatar name={user.user.displayName} src={user.user.photoURL} />
+                  <Avatar name={thread.author.displayName} src={thread.author.photoUrl} />
 
                   <Box display={'flex'} m={0} gap={2}>
-                    <Text  fontSize="md" fontWeight={'bold'}>{user.name}</Text>
-                    <Text  fontSize="sm" color={'gray.500'}>@{user.user.displayName}</Text>
+                    <Text  fontSize="md" fontWeight={'bold'}>{thread.author.name}</Text>
+                    <Text  fontSize="sm" color={'gray.500'}>@{thread.author.displayName}</Text>
                   </Box>
                 </Flex>
                 <Text float={"right"} fontSize={"sm"}>

@@ -146,10 +146,15 @@ export const addPost = (data) => async (dispatch) => {
 
   try {
     await new Promise((resolve, reject) => {
+      
       onAuthStateChanged(auth, async (user) => {
         if (!user) {
           return reject(new Error("No logged-in user"));
         }
+        const userDocRef = doc(db, "users", user.uid);
+        const userDoc = await getDoc(userDocRef);
+       
+      
         const newThreadRef = doc(collection(db, "threads")); // Create a new document reference
         const postDataWithAuthorAndUid = {
           ...data,
@@ -161,6 +166,7 @@ export const addPost = (data) => async (dispatch) => {
             displayName: user.displayName,
             photoUrl: user.photoURL,
             uid: user.uid,
+            name: userDoc.data().name
           },
         };
 

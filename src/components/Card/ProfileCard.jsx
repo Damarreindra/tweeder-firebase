@@ -57,11 +57,11 @@ function ProfileCard({ thread, user }) {
                 />
                 <Box display={"flex"} gap={2}>
                   <Text m={0} fontSize={"md"} fontWeight={"bold"}>
-                    {user.name}
+                    {thread.author.name}
                   </Text>
 
                   <Text fontSize={"sm"} color={"gray.500"}>
-                    @{user.user.displayName}
+                    @{thread.author.displayName}
                   </Text>
                 </Box>
               </Flex>
