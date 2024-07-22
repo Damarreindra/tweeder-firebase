@@ -15,7 +15,7 @@ function Jumbotron({user}) {
         <Flex pl={[2, 5]} p={3} justify="space-between" flexWrap="wrap">
           <Avatar 
             border="solid 2px" 
-            mt={[-6, -8, -10, -16]} 
+            mt={{base: -16, md:-16}} 
             size="2xl" 
             src={user.user.photoURL}
           />    
