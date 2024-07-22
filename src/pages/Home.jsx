@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import PagesTemplate from "../components/Template/Pages";
 import TweedForm from "../components/AddPost";
 import MainCard from "../components/Card/MainCard";
@@ -10,7 +10,8 @@ import PageSkeleton from "../components/Skeleton/PageSkeleton";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import app from "../firebase";
 import { doc, getDoc, getFirestore } from "firebase/firestore";
-import { useState } from "react";
+import { Flex, useDisclosure } from "@chakra-ui/react";
+import NavbarMobile from "../components/navbar/NavbarMobile";
 
 function Home() {
   const threads = useSelector((state) => state.ThreadsReducer.getThreadsResult);
@@ -19,6 +20,7 @@ function Home() {
   const [user, setUser] = useState(null);
   const auth = getAuth(app);
   const db = getFirestore(app);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     dispatch(getThreads());
@@ -42,18 +44,23 @@ function Home() {
 
     return () => unsubscribe();
   }, [auth, db]);
-  
+
   return (
     <>
-       {threads &&   user ? (
-        <PagesTemplate>
-          <TweedForm/>
+      {threads && user ? (
+        <PagesTemplate onOpen={onOpen} isOpen={isOpen} onClose={onClose}>
+          <Flex display={{ md: 'none' }}>
+            <NavbarMobile user={user} onOpen={onOpen} />
+          </Flex>
+        
+            <TweedForm />
+ 
           {threads.map((thread, index) => (
             <MainCard key={index} user={user} thread={thread} />
           ))}
         </PagesTemplate>
       ) : (
-        <PageSkeleton/>
+        <PageSkeleton />
       )}
     </>
   );

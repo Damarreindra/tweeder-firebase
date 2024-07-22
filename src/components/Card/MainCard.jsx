@@ -18,8 +18,21 @@ import { getThread, getThreads, likeThread, unLikeThread } from "../../actions/t
 import moment from "moment";
 
 function MainCard({ thread, user }) {
-  const result = moment(thread.createdAt).startOf('hour').fromNow(); 
-  
+  const createdAt = moment(thread.createdAt)
+  const now = moment()
+  const duration = moment.duration(now.diff(createdAt))
+
+  const formatDuration =(duration)=>{
+    if (duration.asSeconds() < 60) {
+      return `now`;
+    } else if (duration.asMinutes() < 60) {
+      return `${Math.floor(duration.asMinutes())}m`;
+    } else if (duration.asHours() < 24) {
+      return `${Math.floor(duration.asHours())}h`;
+    } 
+  }
+
+
   const dispatch = useDispatch();
 
   const isLiked = thread.likedBy.includes(user.user.uid);
@@ -52,7 +65,7 @@ function MainCard({ thread, user }) {
                   </Box>
                 </Flex>
                 <Text float={"right"} fontSize={"sm"}>
-                  {result}
+                  {formatDuration(duration)}
                 </Text>
               </Flex>
             </CardHeader>

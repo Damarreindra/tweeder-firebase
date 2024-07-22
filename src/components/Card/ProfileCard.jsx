@@ -24,7 +24,19 @@ import { FcComments, FcLike, FcLikePlaceholder } from "react-icons/fc";
 import moment from "moment";
 
 function ProfileCard({ thread, user }) {
-  const result = moment(thread.createdAt).startOf("hour").fromNow();
+  const createdAt = moment(thread.createdAt)
+  const now = moment()
+  const duration = moment.duration(now.diff(createdAt))
+
+  const formatDuration =(duration)=>{
+    if (duration.asSeconds() < 60) {
+      return `now`;
+    } else if (duration.asMinutes() < 60) {
+      return `${Math.floor(duration.asMinutes())}m`;
+    } else if (duration.asHours() < 24) {
+      return `${Math.floor(duration.asHours())}h`;
+    } 
+  }
 
   const userId = localStorage.getItem("uid");
   const dispatch = useDispatch();
@@ -66,7 +78,7 @@ function ProfileCard({ thread, user }) {
                 </Box>
               </Flex>
               <Text float={"right"} fontSize={"sm"}>
-                {result}
+                {formatDuration(duration)}
               </Text>
             </Flex>
           </CardHeader>
