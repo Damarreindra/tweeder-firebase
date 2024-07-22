@@ -1,9 +1,15 @@
-import { Flex, HStack, IconButton, Box, useDisclosure, useOutsideClick } from "@chakra-ui/react";
+import { Flex, HStack, IconButton, Box, useDisclosure, useOutsideClick, Text } from "@chakra-ui/react";
 import React, { useRef, useState } from "react";
 import { MdClose, MdMenu } from "react-icons/md";
 import { Sidebar } from "../Sidebar/Sidebar";
+import { useSelector } from "react-redux";
+import PopularCard from "../Card/PopularCard";
 
 const PagesTemplate = ({ children, onOpen, isOpen, onClose }) => {
+
+  const threads = useSelector((state) => state.ThreadsReducer.getThreadsResult);
+  
+  const sortedThreads = threads ? threads.sort((a,b)=>b.likes - a.likes) : []
   const [collapse, setCollapse] = useState(true);
   const ref = useRef();
 
@@ -11,6 +17,8 @@ const PagesTemplate = ({ children, onOpen, isOpen, onClose }) => {
     ref: ref,
     handler: onClose,
   });
+
+  
 
   return (
     <HStack
@@ -110,14 +118,28 @@ const PagesTemplate = ({ children, onOpen, isOpen, onClose }) => {
         h="full"
         maxW={350}
         bg="white"
-        alignItems="start"
+        alignItems="center"
         p={6}
         flexDirection="column"
-        justifyContent="space-between"
         transition="ease-in-out .2s"
         borderRadius="3xl"
       >
-        {/* Additional content for the right sidebar can go here */}
+              <Flex w={'full'} gap={2}  flexDir={"column"}>
+                <Text
+                fontWeight={'bold'}
+                fontSize={'x-large'}
+                >
+                  Most Liked 
+                </Text>
+               {
+                threads.length ? (
+                 
+                  threads.map((e)=>(
+                    <PopularCard threads={e}/>
+                  ))
+                ):"ERROR"
+               }
+</Flex>
       </Flex>
     </HStack>
   );

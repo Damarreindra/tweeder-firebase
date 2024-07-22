@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PagesTemplate from "../components/Template/Pages";
 import { useDispatch, useSelector } from "react-redux";
-import { getThread } from "../actions/threadsAction";
+import { getThread, getThreads } from "../actions/threadsAction";
 import MainCard from "../components/Card/MainCard";
 import Jumbotron from "../components/Jumbotron/Jumbotron";
 import Lottie from "lottie-react";
@@ -22,6 +22,11 @@ function Profile() {
   const [loading, setLoading] = useState(true);
   const auth = getAuth(app);
   const db = getFirestore(app);
+
+  useEffect(() => {
+    dispatch(getThreads());
+  
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(getThread());
@@ -50,21 +55,23 @@ function Profile() {
     return () => unsubscribe();
   }, [auth, db]);
 
+  const sortedThreads = threads ? threads.sort((a,b)=>b.createdAt - a.createdAt) : []
+
   return (
     <>
       {loading ? (
         <PageSkeleton />
       ) : (
         <PagesTemplate>
-            {threads.length > 0 ? (
+            {sortedThreads.length > 0 ? (
             <NavbarProfile user={user} thread={threads} />
           ) : (
             <StaticNavbarProfile />
           )}
          
           <Jumbotron user={user} />
-          {threads.length > 0 ? (
-            threads.map((thread, index) => (
+          {sortedThreads.length > 0 ? (
+            sortedThreads.map((thread, index) => (
               <ProfileCard key={index} user={user} thread={thread} />
             ))
           ) : (

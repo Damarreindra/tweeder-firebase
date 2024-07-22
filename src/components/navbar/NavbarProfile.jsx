@@ -6,7 +6,6 @@ import { Link, useNavigate } from "react-router-dom";
 
 function NavbarProfile({ user ,thread }) {
   const navigate = useNavigate()
-console.log(user);
   return (
     <>
       <Flex as={"nav"} alignItems={'center'} p={2} bg={"black.200"}>

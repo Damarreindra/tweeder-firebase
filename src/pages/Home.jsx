@@ -45,9 +45,11 @@ function Home() {
     return () => unsubscribe();
   }, [auth, db]);
 
+  const sortedThreads = threads ? threads.sort((a,b)=> b.createdAt - a.createdAt) : []
+
   return (
     <>
-      {threads && user ? (
+      {sortedThreads && user ? (
         <PagesTemplate onOpen={onOpen} isOpen={isOpen} onClose={onClose}>
           <Flex display={{ md: 'none' }}>
             <NavbarMobile user={user} onOpen={onOpen} />
@@ -55,7 +57,7 @@ function Home() {
         
             <TweedForm />
  
-          {threads.map((thread, index) => (
+          {sortedThreads.map((thread, index) => (
             <MainCard key={index} user={user} thread={thread} />
           ))}
         </PagesTemplate>
